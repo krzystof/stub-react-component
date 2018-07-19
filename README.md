@@ -22,3 +22,9 @@ It's similar to Elm architecture, where there is a update function which is pure
 here by the component that holds the data of our page. The view is our UI function. And in Elm,
 we dispatch Commands that are handled by the runtime, do whatever side-effect things it wants,
 and come back to our Update function.
+
+
+## Publish
+
+- ask feedback from famous guys
+- create a npm bin command that generate that for you!
