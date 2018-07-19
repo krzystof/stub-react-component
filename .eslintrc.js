@@ -3,7 +3,7 @@
 Eslint quickstart config
 ------------------------
 
-yarn add --dev eslint eslint-config-airbnb eslint-plugin-import
+yarn add --dev eslint eslint-config-airbnb eslint-plugin-import babel-eslint
 
 [react]
 yarn add --dev eslint-plugin-jsx-a11y eslint-plugin-react
@@ -24,30 +24,24 @@ Rules details:
 module.exports = {
   root: true,
 
-  parserOptions: {
-    parser: 'babel-eslint',
+  parser: 'babel-eslint',
+
+  env: {
+    browser: true,
+    jest: true
   },
 
   extends: [
     'airbnb',
 
     // [a11y]
-    // 'plugin:jsx-a11y/recommended',
-
-    // [vue]
-    // 'plugin:vue/recommended',
-
-    // [prettier]
-    // 'prettier',
-    // 'prettier/standard',
+    'plugin:jsx-a11y/recommended',
   ],
 
   plugins: [
     'import',
-    // 'jsx-a11y',
-    // 'react',
-    // 'vue',
-    // 'prettier',
+    'jsx-a11y',
+    'react',
   ],
 
   rules: {
@@ -57,6 +51,7 @@ module.exports = {
     'lines-between-class-members': 0,
     'arrow-parens': [0, 'as-needed'],
     'arrow-body-style': 0,
+    'spaced-comment': 0,
     'comma-dangle': [0, {
       functions: 'never',
       objects: 'always-multiline',
@@ -65,38 +60,18 @@ module.exports = {
     }],
 
     // [react]
-    // 'react/jsx-one-expression-per-line': 0,
-    // 'react/destructuring-assignment': 0,
-    // 'react/jsx-closing-bracket-location': [0, 'props-aligned'],
-    // 'react/jsx-wrap-multilines': 0,
-    // 'react/forbid-prop-types': 1,
-    // 'react/prop-types': 1,
+    'react/jsx-one-expression-per-line': 0,
+    'react/destructuring-assignment': 0,
+    'react/jsx-closing-bracket-location': [0, 'props-aligned'],
+    'react/jsx-wrap-multilines': 0,
+    'react/forbid-prop-types': 1,
+    'react/prop-types': 1,
 
     // [import]
     'import/no-extraneous-dependencies': 0,
     'import/prefer-default-export': 0,
 
     // [a11y]
-    // 'jsx-a11y/label-has-for': 0, /* that one was deprecated */
-
-    // [vue]
-    // 'vue/attributes-order': [1],
-    // 'vue/max-attributes-per-line': [
-    //   2,
-    //   {
-    //     singleline: 4,
-    //     multiline: {
-    //       max: 1,
-    //       allowFirstLine: false,
-    //     },
-    //   },
-    // ],
-    // 'vue/html-indent': [
-    //   1,
-    //   2,
-    //   {
-    //     closeBracket: 1,
-    //   },
-    // ],
+    'jsx-a11y/label-has-for': 0, /* that one was deprecated */
   },
 }

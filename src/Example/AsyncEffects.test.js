@@ -1,4 +1,8 @@
 /* eslint-env jest */
+import React from 'react'
+import {render, waitForElement} from 'react-testing-library'
+
+import AsyncEffects from './AsyncEffects'
 
 /**
 
@@ -7,7 +11,7 @@ We will run the test suite with the stub provided in this folder.
 Later we might even try to run it on the generated file (when the
 generator will be in place).
 
-For now, let's assume that the AsyncActions loads some data that look
+For now, let's assume that the AsyncEffects loads some data that look
 like this on load:
 
 ```js
@@ -18,15 +22,17 @@ like this on load:
 
 **/
 
-test('runs a callback on initial page load', () => {
+test('runs a callback on initial page load', async () => {
   const {container, getByTestId, getByText} = render(
-    <AsyncActions>
+    <AsyncEffects>
       {({initialState}) => (
         <div>
-          <div data-testid="the-state">{initialState.stubData}</div>
+          <div data-testid="the-state">
+            {initialState.stubData}
+          </div>
         </div>
       )}
-    </AsyncActions>
+    </AsyncEffects>
   )
 
   expect(container).toHaveTextContent('')
