@@ -2,7 +2,10 @@ import React from 'react'
 import {AsyncFn} from './utils'
 
 const fakeApi = {
-  fetchAll() {
+  fetchAll(shouldFail) {
+    if (shouldFail) {
+      return Promise.reject(new Error('Could not retrieve people.'))
+    }
     return Promise.resolve([
       {name: 'Bob'},
       {name: 'Fred'},
@@ -29,13 +32,17 @@ class AsyncEffects extends React.Component {
   componentDidMount = () => {
     this.setState(prevState => ({initialAction: prevState.initialAction.toPending()}))
 
-    fakeApi.fetchAll()
+    // This is an example request that can be set to fail for testing purposes.
+    // Alternatively, you might want to consider passing the async callbacks as props.
+    fakeApi.fetchAll(this.props.failOnLoad)
       .then(result => {
         this.setState(prevState => ({initialAction: prevState.initialAction.toOk(result)}))
       })
-    //   .catch(error => {
-    //     this.setState(state => ({initialAction: {status: 'failure', payload: error}}))
-    //   })
+      .catch(error => {
+        this.setState(prevState => ({
+          initialAction: prevState.initialAction.toFailure(error.message)
+        }))
+      })
   }
 
   showPerson = name => () => {
@@ -76,14 +83,17 @@ class AsyncEffects extends React.Component {
       return okContent
     }
 
-    // if (status === 'failure') {
-    //   return (
-    //     <div>
-    //       Error! This happened:
-    //       {payload.message}
-    //     </div>
-    //   )
-    // }
+    const failureContent = this.state.initialAction.whenFailure(message => {
+      return (
+        <div>
+          Something went wrong: {message}
+        </div>
+      )
+    })
+
+    if (failureContent) {
+      return failureContent
+    }
 
     return null
   }

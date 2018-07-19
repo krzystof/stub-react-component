@@ -24,6 +24,9 @@ like this:
   {name: 'Brandon'},
 ]
 ```
+For the sake of testing, passing a "failOnLoad" props to the components will
+cause the request to fail. Ideally, if you want to test this, pass the async
+callbacks as a props to the AsyncEffects component.
 
 Then the AsyncEffects components pass a props to load a specific username.
 
@@ -33,38 +36,61 @@ Fred => {name: 'Bob', bio: 'Essential. Friends of all.'},
 Brandon => {name: 'Brandon', bio: 'A modern time adventurer.'},
 ```
 
+Fetching by a name that does not exists will throw an error.
+
 **/
 
 afterEach(cleanup)
 
-test('fetch data on initial page load', async () => {
-  const {
-    container,
-    getByTestId,
-    getByText,
-  } = render(
-    <AsyncEffects>
-      {({initialState}) => (
-        <div>
-          <div data-testid="the-persons">
-            {initialState.map(person => (
-              <div key={person.name}>{person.name}</div>
-            ))}
+describe('initial page load', () => {
+  test('fetch data', async () => {
+    const {
+      container,
+      getByTestId,
+      getByText,
+    } = render(
+      <AsyncEffects>
+        {({initialState}) => (
+          <div>
+            <div data-testid="the-persons">
+              {initialState.map(person => (
+                <div key={person.name}>{person.name}</div>
+              ))}
+            </div>
           </div>
-        </div>
-      )}
-    </AsyncEffects>
-  )
+        )}
+      </AsyncEffects>
+    )
 
-  expect(container).toHaveTextContent('')
+    expect(container).toHaveTextContent('')
 
-  await waitForElement(() => getByText('Loading...'))
+    await waitForElement(() => getByText('Loading...'))
 
-  await waitForElement(() => getByTestId('the-persons'))
+    await waitForElement(() => getByTestId('the-persons'))
 
-  expect(getByTestId('the-persons')).toHaveTextContent('Bob')
-  expect(getByTestId('the-persons')).toHaveTextContent('Fred')
-  expect(getByTestId('the-persons')).toHaveTextContent('Brandon')
+    expect(getByTestId('the-persons')).toHaveTextContent('Bob')
+    expect(getByTestId('the-persons')).toHaveTextContent('Fred')
+    expect(getByTestId('the-persons')).toHaveTextContent('Brandon')
+  })
+
+  test('errors during fetching', async () => {
+    const {
+      container,
+      getByText,
+    } = render(
+      <AsyncEffects failOnLoad>
+        {() => (
+          <div>
+            That will never render
+          </div>
+        )}
+      </AsyncEffects>
+    )
+
+    expect(container).toHaveTextContent('')
+    await waitForElement(() => getByText('Loading...'))
+    await waitForElement(() => getByText('Something went wrong: Could not retrieve people.'))
+  })
 })
 
 // initial load failure?
