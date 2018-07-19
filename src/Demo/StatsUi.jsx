@@ -16,7 +16,11 @@ const StatsUi = ({state, username, loadUsernameState, onLoadUsername}) => {
       <div>
         <button type="button" onClick={onLoadUsername}>Load another</button>
       </div>
-
+      <AsyncAction subject={loadUsernameState} when="failure">
+        {(error) => (
+          <div>Something went... bad... {error.message}</div>
+        )}
+      </AsyncAction>
       <AsyncAction subject={loadUsernameState} when="pending">
         {() => (
           <div>LOADING USERNAME...</div>

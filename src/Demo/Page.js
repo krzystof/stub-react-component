@@ -44,9 +44,9 @@ const onLoadUsername = () => {
 
   const username = items[Math.floor(Math.random() * items.length)]
 
-  // if (username === '@sam') {
-  //   Promise.reject({message: 'NO!'})
-  // }
+  if (username === '@sam') {
+    return Promise.reject({message: 'shit happens'})
+  }
 
   return Promise.resolve({username})
 }
