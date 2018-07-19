@@ -1,4 +1,5 @@
 import React from 'react'
+import PossibleStates from 'possible-states'
 
 /**
 
@@ -26,14 +27,21 @@ I wanna make this file as generic as possible.
 
 **/
 
+const asyncAction = PossibleStates(
+  'wait',
+  'pending',
+  'ok<data>',
+  'failure<error>',
+)
+
 class AsyncActions extends React.Component {
   state = {
     initialAction: {status: 'wait'},
-    loadUsernameState: {status: 'wait'},
+    loadUsernameState: asyncAction.toWait(),
   }
 
   componentDidMount = () => {
-    this.setState({initialAction: {status: 'loading'}})
+    this.setState({initialAction: {status: 'pending'}})
 
     this.props.onLoad()
       .then(result => {
@@ -45,28 +53,27 @@ class AsyncActions extends React.Component {
   }
 
   onLoadUsername = stateUpdater => {
-    stateUpdater({status: 'pending'})
+    stateUpdater(asyncAction.toPending())
 
     this.props.onLoadUsername()
-      .then(result => stateUpdater({status: 'ok', payload: result}))
-      .catch(error => stateUpdater({status: 'failure', payload: error}))
+      .then(result => stateUpdater(asyncAction.toOk(result)))
+      .catch(error => stateUpdater(asyncAction.toFailure(error)))
   }
 
   render() {
     const {status, payload} = this.state.initialAction
 
-    console.log('In AsyncActions', this.state.loadUsernameState.status)
-
     if (status === 'ok') {
       return this.props.children({
-        ...payload,
-        loadUsernameState: this.state.loadUsernameState,
-      }, {
+        initialState: {
+          ...payload,
+          loadUsernameState: this.state.loadUsernameState,
+        },
         loadUsername: this.onLoadUsername,
       })
     }
 
-    if (status === 'loading') {
+    if (status === 'pending') {
       return <div>Loading...</div>
     }
 

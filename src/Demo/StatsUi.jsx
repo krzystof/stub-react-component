@@ -7,25 +7,36 @@ const AsyncAction = ({subject, when, children}) => (
     : null
 )
 
-const StatsUi = ({state, username, loadUsernameState, onLoadUsername}) => {
+const StatsUi = ({
+  state,
+  username,
+  loadUsernameState,
+  onLoadUsername,
+  searchTerm,
+  changeSearchTerm,
+}) => {
+  console.log(loadUsernameState.current(), loadUsernameState.data())
   return (
     <div>
       <div>
-        Hey! {loadUsernameState.status === 'ok' ? loadUsernameState.payload.username : username}!
+        Hey! {loadUsernameState.whenOk(({data}) => data.username) || username}
       </div>
       <div>
         <button type="button" onClick={onLoadUsername}>Load another</button>
       </div>
-      <AsyncAction subject={loadUsernameState} when="failure">
-        {(error) => (
-          <div>Something went... bad... {error.message}</div>
-        )}
-      </AsyncAction>
-      <AsyncAction subject={loadUsernameState} when="pending">
-        {() => (
-          <div>LOADING USERNAME...</div>
-        )}
-      </AsyncAction>
+
+      {loadUsernameState.whenPending(<div>LOADING USERNAME</div>)}
+
+      {loadUsernameState.whenFailure(({message}) => (
+          <div>Something went... bad... {message}</div>
+      ))}
+
+      <div>
+        <p>This is a test for some synchronous events:</p>
+        <label>Search</label>
+        <input type="text" value={searchTerm} onChange={changeSearchTerm}/>
+        <h2>{searchTerm}</h2>
+      </div>
     </div>
   )
 }

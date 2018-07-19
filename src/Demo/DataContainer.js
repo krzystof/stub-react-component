@@ -15,6 +15,8 @@ Reasons to change:
 Adding a new feature, changing the behaviour or the shape of the data,
 ... Loads in fact.
 BUT it should not change if we change the UI, refactor the markup, and so on.
+AND it should not change if we add another async functions that the UI can dispatch.
+
 
 
 
@@ -26,7 +28,10 @@ BUT it should not change if we change the UI, refactor the markup, and so on.
 
 
 class DataContainer extends Component {
-  state = this.props.initialState
+  state = {
+    ...this.props.initialState,
+    searchTerm: '',
+  }
 
   loadUsername = () => {
     //
@@ -46,9 +51,15 @@ class DataContainer extends Component {
     })
   }
 
+  changeSearchTerm = event => {
+    event.preventDefault()
+    this.setState({searchTerm: event.target.value})
+  }
+
   render() {
     return this.props.children({
       ...this.state,
+      changeSearchTerm: this.changeSearchTerm,
       onLoadUsername: this.loadUsername,
     })
   }

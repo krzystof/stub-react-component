@@ -5044,6 +5044,10 @@ posix-character-classes@^0.1.0:
   version "0.1.1"
   resolved "https://registry.yarnpkg.com/posix-character-classes/-/posix-character-classes-0.1.1.tgz#01eac0fe3b5af71a2a6c02feabb8c1fef7e00eab"
 
+possible-states@^1.3.0:
+  version "1.3.0"
+  resolved "https://registry.yarnpkg.com/possible-states/-/possible-states-1.3.0.tgz#9954ecdfdbebaecc49819bf94cf9be9009e5d8d0"
+
 postcss-calc@^5.2.0:
   version "5.3.1"
   resolved "https://registry.yarnpkg.com/postcss-calc/-/postcss-calc-5.3.1.tgz#77bae7ca928ad85716e2fda42f261bf7c1d65b5e"

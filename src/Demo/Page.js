@@ -53,8 +53,8 @@ const onLoadUsername = () => {
 
 const Page = () => (
   <AsyncActions onLoad={apiGetStuff} onLoadUsername={onLoadUsername}>
-    {(initialState, asyncHandlers) => (
-      <DataContainer initialState={initialState} {...asyncHandlers} >
+    {(initialStateAndAsyncHandlers) => (
+      <DataContainer {...initialStateAndAsyncHandlers} >
         {({...props}) => (
           <StatsUi {...props} />
         )}
