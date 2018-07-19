@@ -1,9 +1,9 @@
 import React from 'react'
+import {AsyncFn} from './utils'
 
-class AsyncActions extends React.Component {
+class AsyncEffects extends React.Component {
   state = {
-    initialAction: {status: 'wait'},
-    loadUsernameState: asyncAction.toWait(),
+    initialAction: new AsyncFn(),
   }
 
   componentDidMount = () => {
@@ -60,4 +60,4 @@ class AsyncActions extends React.Component {
   }
 }
 
-export default AsyncActions
+export default AsyncEffects

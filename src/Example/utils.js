@@ -4,20 +4,25 @@ Remove this file if you already have it globally in your app and don't need it.
 
 **/
 
-const call = (state, query) => val => {
+const maybeCall = (state, query, data) => val => {
   if (state !== query) {
     return null
   }
-  return typeof val === 'function' ? val() : val
+  return typeof val === 'function' ? val(data) : val
 }
 
 
-const AsyncFn = (state = 'idle') => {
+const AsyncFn = (state = 'idle', data = null) => {
   return {
-    whenIdle: call(state, 'idle'),
-    whenPending: call(state, 'pending'),
+    whenIdle: maybeCall(state, 'idle'),
+    whenPending: maybeCall(state, 'pending'),
+    whenOk: maybeCall(state, 'ok', data),
+    whenFailure: maybeCall(state, 'failure', data),
 
-    toPending: () => new AsyncFn('pending')
+    toIdle: () => new AsyncFn('idle'),
+    toPending: () => new AsyncFn('pending'),
+    toOk: (newData) => new AsyncFn('ok', typeof newData === 'object' ? {...newData} : newData),
+    toFailure: (newData) => new AsyncFn('failure', typeof newData === 'object' ? {...newData} : newData),
   }
 }
 

@@ -23,8 +23,10 @@ like this on load:
 **/
 
 test('runs a callback on initial page load', async () => {
+  const mockLoad = jest.fn(() => Promise.resolve({stubData: 'Here is a thing'}))
+
   const {container, getByTestId, getByText} = render(
-    <AsyncEffects>
+    <AsyncEffects onLoad={mockLoad}>
       {({initialState}) => (
         <div>
           <div data-testid="the-state">
