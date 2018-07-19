@@ -52,6 +52,7 @@ module.exports = {
     'arrow-parens': [0, 'as-needed'],
     'arrow-body-style': 0,
     'spaced-comment': 0,
+    'prefer-promise-reject-errors': 0,
     'comma-dangle': [0, {
       functions: 'never',
       objects: 'always-multiline',
