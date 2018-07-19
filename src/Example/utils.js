@@ -8,7 +8,10 @@ const maybeCall = (state, query, data) => val => {
   if (state !== query) {
     return null
   }
-  return typeof val === 'function' ? val(data) : val
+  if (typeof val === 'function') {
+    return val(data)
+  }
+  return typeof val === 'undefined' ? true : val
 }
 
 
@@ -21,8 +24,8 @@ const AsyncFn = (state = 'idle', data = null) => {
 
     toIdle: () => new AsyncFn('idle'),
     toPending: () => new AsyncFn('pending'),
-    toOk: (newData) => new AsyncFn('ok', typeof newData === 'object' ? {...newData} : newData),
-    toFailure: (newData) => new AsyncFn('failure', typeof newData === 'object' ? {...newData} : newData),
+    toOk: (newData) => new AsyncFn('ok', newData),
+    toFailure: (newData) => new AsyncFn('failure', newData),
   }
 }
 

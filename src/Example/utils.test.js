@@ -10,6 +10,11 @@ test('whenIdle with a callback', () => {
   expect(asyncFn.whenIdle(() => 'something')).toBe('something')
 })
 
+test('return true when the state is valid', () => {
+  const asyncFn = new AsyncFn()
+  expect(asyncFn.whenIdle()).toBe(true)
+})
+
 test('can be pending', () => {
   const asyncFn = new AsyncFn().toPending()
   expect(asyncFn.whenPending(true)).toBe(true)
@@ -19,6 +24,11 @@ test('can be pending', () => {
 test('can be ok', () => {
   const asyncFn = new AsyncFn().toOk({stub: 'data'})
   expect(asyncFn.whenOk(({stub}) => stub)).toBe('data')
+})
+
+test('can be ok with an array', () => {
+  const asyncFn = new AsyncFn().toOk(['one', 'two', 'three'])
+  expect(asyncFn.whenOk(stub => stub)).toEqual(['one', 'two', 'three'])
 })
 
 test('can be ok with a string', () => {
