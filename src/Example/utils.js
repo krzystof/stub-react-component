@@ -18,12 +18,12 @@ const maybeCall = (state, query, data) => val => {
 const AsyncFn = (state = 'idle', data = null) => {
   return {
     whenIdle: maybeCall(state, 'idle'),
-    whenPending: maybeCall(state, 'pending'),
+    whenPending: maybeCall(state, 'pending', data),
     whenOk: maybeCall(state, 'ok', data),
     whenFailure: maybeCall(state, 'failure', data),
 
     toIdle: () => new AsyncFn('idle'),
-    toPending: () => new AsyncFn('pending'),
+    toPending: (arg) => new AsyncFn('pending', arg),
     toOk: (newData) => new AsyncFn('ok', newData),
     toFailure: (newData) => new AsyncFn('failure', newData),
   }

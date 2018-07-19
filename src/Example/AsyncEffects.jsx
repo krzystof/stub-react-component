@@ -2,30 +2,49 @@ import React from 'react'
 import {AsyncFn} from './utils'
 
 const fakeApi = {
-  onLoad() {
+  fetchAll() {
     return Promise.resolve([
-      {name: 'bob'},
-      {name: 'fred'},
-      {name: 'brandon'},
+      {name: 'Bob'},
+      {name: 'Fred'},
+      {name: 'Brandon'},
     ])
+  },
+
+  getByName(name) {
+    const stubs = {
+      Bob: {name: 'Bob', bio: 'Coding night and day.'},
+      Fred: {name: 'Bob', bio: 'Essential. Friends of all.'},
+      Brandon: {name: 'Brandon', bio: 'A modern time adventurer.'},
+    }
+    return Promise.resolve(stubs[name])
   }
 }
 
 class AsyncEffects extends React.Component {
   state = {
     initialAction: new AsyncFn(),
+    showPersonState: new AsyncFn(),
   }
 
   componentDidMount = () => {
     this.setState(prevState => ({initialAction: prevState.initialAction.toPending()}))
 
-    fakeApi.onLoad()
+    fakeApi.fetchAll()
       .then(result => {
         this.setState(prevState => ({initialAction: prevState.initialAction.toOk(result)}))
       })
     //   .catch(error => {
     //     this.setState(state => ({initialAction: {status: 'failure', payload: error}}))
     //   })
+  }
+
+  showPerson = name => () => {
+    this.setState(prevState => ({showPersonState: prevState.showPersonState.toPending(name)}))
+
+    fakeApi.getByName(name)
+      .then(result => {
+        this.setState(prevState => ({showPersonState: prevState.showPersonState.toOk(result)}))
+      })
   }
 
   // onLoadUsername = stateUpdater => {
@@ -37,18 +56,6 @@ class AsyncEffects extends React.Component {
   // }
 
   render() {
-    const {status, payload} = this.state.initialAction
-
-    if (status === 'ok') {
-      return this.props.children({
-        initialState: {
-          ...payload,
-          // loadUsernameState: this.state.loadUsernameState,
-        },
-        // loadUsername: this.onLoadUsername,
-      })
-    }
-
     if (this.state.initialAction.whenPending()) {
       return (
         <div>
@@ -60,7 +67,8 @@ class AsyncEffects extends React.Component {
     const okContent = this.state.initialAction.whenOk(data => {
       return this.props.children({
         initialState: data,
-        // loadUsernameState: this.state.loadUsernameState,
+        showPersonState: this.state.showPersonState,
+        onShowPerson: this.showPerson,
       })
     })
 
@@ -68,26 +76,14 @@ class AsyncEffects extends React.Component {
       return okContent
     }
 
-    if (this.state.initialAction.whenOk()) {
-      return
-    }
-
-    if (status === 'pending') {
-      return (
-        <div>
-          Loading...
-        </div>
-      )
-    }
-
-    if (status === 'failure') {
-      return (
-        <div>
-          Error! This happened:
-          {payload.message}
-        </div>
-      )
-    }
+    // if (status === 'failure') {
+    //   return (
+    //     <div>
+    //       Error! This happened:
+    //       {payload.message}
+    //     </div>
+    //   )
+    // }
 
     return null
   }

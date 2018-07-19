@@ -21,6 +21,11 @@ test('can be pending', () => {
   expect(asyncFn.whenIdle(true)).toBe(null)
 })
 
+test('can be pending with the given argument', () => {
+  const asyncFn = new AsyncFn().toPending('see me?')
+  expect(asyncFn.whenPending(arg => arg)).toBe('see me?')
+})
+
 test('can be ok', () => {
   const asyncFn = new AsyncFn().toOk({stub: 'data'})
   expect(asyncFn.whenOk(({stub}) => stub)).toBe('data')

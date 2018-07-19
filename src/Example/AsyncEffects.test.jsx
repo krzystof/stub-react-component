@@ -1,6 +1,8 @@
 /* eslint-env jest */
 import React from 'react'
-import {render, waitForElement} from 'react-testing-library'
+import {
+  render, cleanup, fireEvent, waitForElement
+} from 'react-testing-library'
 import 'jest-dom/extend-expect'
 
 import AsyncEffects from './AsyncEffects'
@@ -17,15 +19,25 @@ like this:
 
 ```js
 [
-  {name: 'bob'},
-  {name: 'fred'},
-  {name: 'brandon'},
+  {name: 'Bob'},
+  {name: 'Fred'},
+  {name: 'Brandon'},
 ]
+```
+
+Then the AsyncEffects components pass a props to load a specific username.
+
+```
+Bob => {name: 'Bob', bio: 'Coding night and day.'},
+Fred => {name: 'Bob', bio: 'Essential. Friends of all.'},
+Brandon => {name: 'Brandon', bio: 'A modern time adventurer.'},
 ```
 
 **/
 
-test('runs a callback on initial page load', async () => {
+afterEach(cleanup)
+
+test('fetch data on initial page load', async () => {
   const {
     container,
     getByTestId,
@@ -34,7 +46,7 @@ test('runs a callback on initial page load', async () => {
     <AsyncEffects>
       {({initialState}) => (
         <div>
-          <div data-testid="the-state">
+          <div data-testid="the-persons">
             {initialState.map(person => (
               <div key={person.name}>{person.name}</div>
             ))}
@@ -48,13 +60,59 @@ test('runs a callback on initial page load', async () => {
 
   await waitForElement(() => getByText('Loading...'))
 
-  await waitForElement(() => getByTestId('the-state'))
+  await waitForElement(() => getByTestId('the-persons'))
 
-  expect(getByTestId('the-state')).toHaveTextContent('bob')
-  expect(getByTestId('the-state')).toHaveTextContent('fred')
-  expect(getByTestId('the-state')).toHaveTextContent('brandon')
+  expect(getByTestId('the-persons')).toHaveTextContent('Bob')
+  expect(getByTestId('the-persons')).toHaveTextContent('Fred')
+  expect(getByTestId('the-persons')).toHaveTextContent('Brandon')
 })
 
-// initial load error
+// initial load failure?
 
-// initial load
+test('fetch data when clicking a button, keep the state in the AsyncEffect', async () => {
+  const {
+    getByTestId,
+    getByText,
+  } = render(
+    <AsyncEffects>
+      {({initialState, showPersonState, onShowPerson}) => (
+        <div>
+          <div data-testid="the-persons">
+            {initialState.map(person => (
+              <div key={person.name}>
+                <div>
+                  {person.name}
+                </div>
+                <button type="button" onClick={onShowPerson(person.name)}>
+                  show {person.name} bio
+                </button>
+              </div>
+            ))}
+          </div>
+          {showPersonState.whenPending(name => (
+            <div>Loading {name} bio...</div>
+          ))}
+          {showPersonState.whenOk(person => (
+            <div data-testid="the-person">
+              {person.name}: {person.bio}
+            </div>
+          ))}
+        </div>
+      )}
+    </AsyncEffects>
+  )
+
+  await waitForElement(() => getByTestId('the-persons'))
+
+  fireEvent.click(getByText('show Brandon bio'))
+
+  await waitForElement(() => getByText('Loading Brandon bio...'))
+  await waitForElement(() => getByTestId('the-person'))
+
+  expect(getByTestId('the-person')).toHaveTextContent('Brandon: A modern time adventurer.')
+})
+
+// failure?
+
+// test('Handle async effect, state is managed in the child component', async () => {
+// failure?
