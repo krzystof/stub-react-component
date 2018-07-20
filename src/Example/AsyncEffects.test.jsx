@@ -6,6 +6,7 @@ import {
 import 'jest-dom/extend-expect'
 
 import AsyncEffects from './AsyncEffects'
+import {AsyncFn} from './utils'
 
 /**
 
@@ -42,7 +43,7 @@ Fetching by a name that does not exists will throw an error.
 
 afterEach(cleanup)
 
-describe('initial page load', () => {
+describe('<AsyncEffects /> initial page load', () => {
   test('fetch data', async () => {
     const {
       container,
@@ -93,52 +94,127 @@ describe('initial page load', () => {
   })
 })
 
-// initial load failure?
-
-test('fetch data when clicking a button, keep the state in the AsyncEffect', async () => {
-  const {
-    getByTestId,
-    getByText,
-  } = render(
-    <AsyncEffects>
-      {({initialState, showPersonState, onShowPerson}) => (
-        <div>
-          <div data-testid="the-persons">
-            {initialState.map(person => (
-              <div key={person.name}>
-                <div>
-                  {person.name}
+describe('<AsyncEffects /> with the state in the component', () => {
+  test('fetch data when clicking a button, keep the state in the AsyncEffect', async () => {
+    const {
+      getByTestId,
+      getByText,
+    } = render(
+      <AsyncEffects>
+        {({initialState, showPersonState, onShowPerson}) => (
+          <div>
+            <div data-testid="the-persons">
+              {initialState.map(person => (
+                <div key={person.name}>
+                  <div>
+                    {person.name}
+                  </div>
+                  <button type="button" onClick={onShowPerson(person.name)}>
+                    show {person.name} bio
+                  </button>
                 </div>
-                <button type="button" onClick={onShowPerson(person.name)}>
-                  show {person.name} bio
-                </button>
+              ))}
+            </div>
+            {showPersonState.whenPending(name => (
+              <div>Loading {name} bio...</div>
+            ))}
+            {showPersonState.whenOk(person => (
+              <div data-testid="the-person">
+                {person.name}: {person.bio}
               </div>
             ))}
           </div>
-          {showPersonState.whenPending(name => (
-            <div>Loading {name} bio...</div>
-          ))}
-          {showPersonState.whenOk(person => (
-            <div data-testid="the-person">
-              {person.name}: {person.bio}
-            </div>
-          ))}
-        </div>
-      )}
+        )}
+      </AsyncEffects>
+    )
+
+    await waitForElement(() => getByTestId('the-persons'))
+
+    fireEvent.click(getByText('show Brandon bio'))
+
+    await waitForElement(() => getByText('Loading Brandon bio...'))
+    await waitForElement(() => getByTestId('the-person'))
+
+    expect(getByTestId('the-person')).toHaveTextContent('Brandon: A modern time adventurer.')
+  })
+
+  test('invalid username', async () => {
+    const {getByText} = render(
+      <AsyncEffects>
+        {({showPersonState, onShowPerson}) => (
+          <div>
+            <button type="button" onClick={onShowPerson('invalid')}>
+              show invalid bio
+            </button>
+            {showPersonState.whenFailure(message => (
+              <div>{message}</div>
+            ))}
+          </div>
+        )}
+      </AsyncEffects>
+    )
+
+    await waitForElement(() => getByText('show invalid bio'))
+
+    fireEvent.click(getByText('show invalid bio'))
+
+    await waitForElement(() => getByText('Something went wrong: invalid is not a valid person.'))
+  })
+})
+
+// describe('<AsyncEffects /> with the state in child', () => {
+test('pass a callback to handle the state stored in the child', async () => {
+  class BobProfile extends React.Component {
+      state = {showFriendsState: new AsyncFn()}
+
+      componentDidMount = () => {
+        this.props.onShowBestFriend('Bob', newState => this.setState(() => ({showFriendsState: newState})))
+      }
+
+      render() {
+        const pendingContent = this.state.showFriendsState.whenPending(() => <div>pending</div>)
+        if (pendingContent) return pendingContent
+
+        const okContent = this.state.showFriendsState.whenOk((friend) => <div>Bob best friend is {friend.name}</div>)
+        if (okContent) return okContent
+
+        const failureContent = this.state.showFriendsState.whenFailure(() => <div>failure</div>)
+        if (failureContent) return failureContent
+
+        return null
+      }
+  }
+
+  const {getByText} = render(
+    <AsyncEffects>
+      {({onShowBestFriend}) => <BobProfile onShowBestFriend={onShowBestFriend} />}
     </AsyncEffects>
   )
 
-  await waitForElement(() => getByTestId('the-persons'))
-
-  fireEvent.click(getByText('show Brandon bio'))
-
-  await waitForElement(() => getByText('Loading Brandon bio...'))
-  await waitForElement(() => getByTestId('the-person'))
-
-  expect(getByTestId('the-person')).toHaveTextContent('Brandon: A modern time adventurer.')
+  await waitForElement(() => getByText('pending'))
+  await waitForElement(() => getByText('Bob best friend is Martin'))
 })
 
-// failure?
+//   test('invalid username', async () => {
+//     const {getByText} = render(
+//       <AsyncEffects>
+//         {({showPersonState, onShowPerson}) => (
+//           <div>
+//             <button type="button" onClick={onShowPerson('invalid')}>
+//               show invalid bio
+//             </button>
+//             {showPersonState.whenFailure(message => (
+//               <div>{message}</div>
+//             ))}
+//           </div>
+//         )}
+//       </AsyncEffects>
+//     )
 
-// test('Handle async effect, state is managed in the child component', async () => {
-// failure?
+//     await waitForElement(() => getByText('show invalid bio'))
+
+//     fireEvent.click(getByText('show invalid bio'))
+
+//     await waitForElement(() => getByText('Something went wrong: invalid is not a valid person.'))
+//   })
+// })

@@ -19,7 +19,27 @@ const fakeApi = {
       Fred: {name: 'Bob', bio: 'Essential. Friends of all.'},
       Brandon: {name: 'Brandon', bio: 'A modern time adventurer.'},
     }
+    if (!stubs[name]) {
+      return Promise.reject(new Error(`${name} is not a valid person.`))
+    }
     return Promise.resolve(stubs[name])
+  },
+
+  getBestFriend(name) {
+    const stubs = {
+      Bob: {name: 'Martin'},
+      Fred: {name: 'Julie'},
+      Brandon: {name: 'Kim'},
+    }
+
+    return new Promise((resolve, reject) => {
+      setTimeout(() => {
+        if (!stubs[name]) {
+          return reject(new Error(`${name} is not a valid person.`))
+        }
+        return resolve(stubs[name])
+      }, 50)
+    })
   }
 }
 
@@ -45,6 +65,7 @@ class AsyncEffects extends React.Component {
       })
   }
 
+  // This is an example of the state of an asynchronous request state owned by the <AsyncEffects /> component.
   showPerson = name => () => {
     this.setState(prevState => ({showPersonState: prevState.showPersonState.toPending(name)}))
 
@@ -52,15 +73,34 @@ class AsyncEffects extends React.Component {
       .then(result => {
         this.setState(prevState => ({showPersonState: prevState.showPersonState.toOk(result)}))
       })
+      .catch(error => {
+        this.setState(prevState => ({
+          initialAction: prevState.showPersonState.toFailure(error.message)
+        }))
+      })
   }
 
-  // onLoadUsername = stateUpdater => {
-  //   stateUpdater(asyncAction.toPending())
+  // This is an example to handle the change of an asynchronous piece of state owned by a child component.
+  // I am not sure yet what are the benefits of one over the other.
+  showBestFriend = (name, stateUpdater) => {
+    const fn = new AsyncFn()
+    stateUpdater(fn.toPending(name))
 
-  //   this.props.onLoadUsername()
-  //     .then(result => stateUpdater(asyncAction.toOk(result)))
-  //     .catch(error => stateUpdater(asyncAction.toFailure(error)))
-  // }
+    fakeApi.getBestFriend(name)
+      .then(result => stateUpdater(fn.toOk(result)))
+
+    // this.setState(prevState => ({showPersonState: prevState.showPersonState.toPending(name)}))
+
+    //     fakeApi.getByName(name)
+    //       .then(result => {
+    //         this.setState(prevState => ({showPersonState: prevState.showPersonState.toOk(result)}))
+    //       })
+    //       .catch(error => {
+    //         this.setState(prevState => ({
+    //           initialAction: prevState.showPersonState.toFailure(error.message)
+    //         }))
+    //       })
+  }
 
   render() {
     if (this.state.initialAction.whenPending()) {
@@ -76,6 +116,7 @@ class AsyncEffects extends React.Component {
         initialState: data,
         showPersonState: this.state.showPersonState,
         onShowPerson: this.showPerson,
+        onShowBestFriend: this.showBestFriend,
       })
     })
 
