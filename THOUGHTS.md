@@ -11,3 +11,19 @@ The component might look like this
   )}
 </AsyncAction>
 ```
+
+
+
+**Utilities for Msg**
+
+Something that would allow us to define constants easily
+
+```js
+const Msg = Messages([
+  'ClearSomething',
+  'ChangeName',
+  // ...
+])
+```
+
+Can even throw an Error if trying to access a `Msg.NotExists`.

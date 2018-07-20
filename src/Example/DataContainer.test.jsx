@@ -46,3 +46,23 @@ test('<DataContainer /> traditional handler', () => {
   fireEvent.click(getByTestId('btn'))
   expect(container).toHaveTextContent('Shame...')
 })
+
+test('<DataContainer /> with a state reducer function', () => {
+  const {getByTestId} = render(
+    <DataContainer>
+      {({searchTerm, changeSearchTerm}) => (
+        <div>
+          <input data-testid="input" type="text" value={searchTerm} onChange={changeSearchTerm} />
+          <div data-testid="output">{searchTerm.toUpperCase()}</div>
+        </div>
+      )}
+    </DataContainer>
+  )
+  expect(getByTestId('output')).toHaveTextContent('')
+
+  const input = getByTestId('input')
+  input.value = 'search this'
+  fireEvent.change(input)
+
+  expect(getByTestId('output')).toHaveTextContent('search this')
+})
