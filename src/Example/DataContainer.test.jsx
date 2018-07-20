@@ -11,8 +11,6 @@ afterEach(cleanup)
 What needs to be tested here?
 We have a data container that receives some initial state.
 
-- I can update it using traditional cb.
-- I can update it using a state reducer style.
 - It is updated by an async stuff.
 
 **/
@@ -65,4 +63,33 @@ test('<DataContainer /> with a state reducer function', () => {
   fireEvent.change(input)
 
   expect(getByTestId('output')).toHaveTextContent('search this')
+})
+
+test('<DataContainer /> handling impure stuff to someone else', () => {
+  // Nasty side effect.
+  // That could be fetching resource or anything else.
+  let sideEffectResult = 0
+  const stubTick = callback => {
+    sideEffectResult += 1
+    callback(sideEffectResult)
+  }
+
+  const {getByTestId} = render(
+    <DataContainer onTick={stubTick}>
+      {({counter, tickOne}) => (
+        <div>
+          <div data-testid="the-counter">{counter}</div>
+          <button type="button" data-testid="the-button" onClick={tickOne}>tick</button>
+        </div>
+      )}
+    </DataContainer>
+  )
+
+  expect(getByTestId('the-counter')).toHaveTextContent(0)
+
+  fireEvent.click(getByTestId('the-button'))
+  expect(getByTestId('the-counter')).toHaveTextContent(1)
+
+  fireEvent.click(getByTestId('the-button'))
+  expect(getByTestId('the-counter')).toHaveTextContent(2)
 })

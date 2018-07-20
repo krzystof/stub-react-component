@@ -13,6 +13,7 @@ class DataContainer extends Component {
   state = {
     ...this.props.initialState,
     searchTerm: '',
+    counter: 0,
   }
 
   /**
@@ -29,6 +30,10 @@ class DataContainer extends Component {
   I like the Msg separation, but I am not sure it's really easier to
   read At least there is only one place to check for to see how the
   state can be updated an in which way.
+
+    ??? What if we put the state reducer in a function
+    ??? outside the class, or a static function?
+
   **/
   changeSearchTerm = event => this.update(Msg.ChangeSearchTerm, event.target.value)
 
@@ -41,6 +46,13 @@ class DataContainer extends Component {
   }
 
   /**
+  Handling async updates to someone else.
+  **/
+  tickOne = () => {
+    this.props.onTick(newCount => this.setState({counter: newCount}))
+  }
+
+  /**
   Render the children and pass all
   the state and handlers as props.
   **/
@@ -48,7 +60,8 @@ class DataContainer extends Component {
     return this.props.children({
       ...this.state,
       toggleIsCool: this.toggleIsCool,
-      changeSearchTerm: this.changeSearchTerm
+      changeSearchTerm: this.changeSearchTerm,
+      tickOne: this.tickOne,
     })
   }
 }
