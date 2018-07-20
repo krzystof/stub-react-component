@@ -162,9 +162,9 @@ describe('<AsyncEffects /> with the state in the component', () => {
   })
 })
 
-// describe('<AsyncEffects /> with the state in child', () => {
-test('pass a callback to handle the state stored in the child', async () => {
-  class BobProfile extends React.Component {
+describe('<AsyncEffects /> with the state in child', () => {
+  test('pass a callback to handle the state stored in the child', async () => {
+    class BobProfile extends React.Component {
       state = {showFriendsState: new AsyncFn()}
 
       componentDidMount = () => {
@@ -183,38 +183,51 @@ test('pass a callback to handle the state stored in the child', async () => {
 
         return null
       }
-  }
+    }
 
-  const {getByText} = render(
-    <AsyncEffects>
-      {({onShowBestFriend}) => <BobProfile onShowBestFriend={onShowBestFriend} />}
-    </AsyncEffects>
-  )
+    const {getByText} = render(
+      <AsyncEffects>
+        {({onShowBestFriend}) => <BobProfile onShowBestFriend={onShowBestFriend} />}
+      </AsyncEffects>
+    )
 
-  await waitForElement(() => getByText('pending'))
-  await waitForElement(() => getByText('Bob best friend is Martin'))
+    await waitForElement(() => getByText('pending'))
+    await waitForElement(() => getByText('Bob best friend is Martin'))
+  })
+
+  test('invalid username', async () => {
+    class BobProfile extends React.Component {
+      state = {showFriendsState: new AsyncFn()}
+
+      componentDidMount = () => {
+        this.props.onShowBestFriend('invalid', newState => this.setState(() => ({showFriendsState: newState})))
+      }
+
+      render() {
+        const pendingContent = this.state.showFriendsState.whenPending(() => <div>pending</div>)
+        if (pendingContent) return pendingContent
+
+        const okContent = this.state.showFriendsState.whenOk(
+          (friend) => <div>Bob best friend is {friend.name}</div>
+        )
+        if (okContent) return okContent
+
+        const failureContent = this.state.showFriendsState.whenFailure(
+          (error) => <div>Something went wrong: {error.message}</div>
+        )
+        if (failureContent) return failureContent
+
+        return null
+      }
+    }
+
+    const {getByText} = render(
+      <AsyncEffects>
+        {({onShowBestFriend}) => <BobProfile onShowBestFriend={onShowBestFriend} />}
+      </AsyncEffects>
+    )
+
+    await waitForElement(() => getByText('pending'))
+    await waitForElement(() => getByText('Something went wrong: invalid is not a valid person.'))
+  })
 })
-
-//   test('invalid username', async () => {
-//     const {getByText} = render(
-//       <AsyncEffects>
-//         {({showPersonState, onShowPerson}) => (
-//           <div>
-//             <button type="button" onClick={onShowPerson('invalid')}>
-//               show invalid bio
-//             </button>
-//             {showPersonState.whenFailure(message => (
-//               <div>{message}</div>
-//             ))}
-//           </div>
-//         )}
-//       </AsyncEffects>
-//     )
-
-//     await waitForElement(() => getByText('show invalid bio'))
-
-//     fireEvent.click(getByText('show invalid bio'))
-
-//     await waitForElement(() => getByText('Something went wrong: invalid is not a valid person.'))
-//   })
-// })

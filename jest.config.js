@@ -3,7 +3,7 @@
 Eslint quickstart config
 ------------------------
 
-yarn add --dev jest
+yarn add --dev jest jest-dom
 
 Documentation:
 https://facebook.github.io/jest/docs/en/configuration.html
@@ -28,8 +28,13 @@ module.exports = {
 
   // 'moduleNameMapper': {
   //   '@/(.*)': '<rootDir>/src/$1',
-  //   '\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$': '<rootDir>/src/__mocks__/fileMock.js'
+  //   '\\.(jpg|jpeg|png|gif|...add extension here)$': '<rootDir>/src/__mocks__/fileMock.js'
   // }
+
+  transform: {
+    '^.+\\.(js|jsx|mjs)$': '<rootDir>/node_modules/babel-jest',
+    '^.+\\.css$': '<rootDir>/src/jestCssTransform.js',
+  },
 
   testMatch: [
     '**/__tests__/**/*.js?(x)',
