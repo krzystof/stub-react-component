@@ -66,6 +66,7 @@ module.exports = {
     'react/jsx-wrap-multilines': 0,
     'react/forbid-prop-types': 1,
     'react/prop-types': 1,
+    'react/prefer-stateless-function': 1,
 
     // [import]
     'import/no-extraneous-dependencies': 0,

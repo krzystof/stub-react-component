@@ -16,7 +16,6 @@ the external depencies of our page (file system,
 APIs, any other asynchronous requests).
 
 
-
 Reason to change:
 
 The only reason to modify this file should be
@@ -45,7 +44,7 @@ const onLoadUsername = () => {
   const username = items[Math.floor(Math.random() * items.length)]
 
   if (username === '@sam') {
-    return Promise.reject({message: 'shit happens'})
+    return Promise.reject(new Error('shit happens'))
   }
 
   return Promise.resolve({username})
@@ -54,7 +53,7 @@ const onLoadUsername = () => {
 const Page = () => (
   <AsyncActions onLoad={apiGetStuff} onLoadUsername={onLoadUsername}>
     {(initialStateAndAsyncHandlers) => (
-      <DataContainer {...initialStateAndAsyncHandlers} >
+      <DataContainer {...initialStateAndAsyncHandlers}>
         {({...props}) => (
           <StatsUi {...props} />
         )}

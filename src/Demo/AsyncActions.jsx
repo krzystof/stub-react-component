@@ -19,7 +19,6 @@ act on my UI based on this information.
 I wanna make this file as generic as possible.
 
 
-
 // @TODO
 // THERE SHOULD BE NO REASON TO MODIFY THIS COMPONENT.
 // to do this, I must keep only 2 things here: an onLoad props
@@ -48,7 +47,7 @@ class AsyncActions extends React.Component {
         this.setState(() => ({initialAction: {status: 'ok', payload: result}}))
       })
       .catch(error => {
-        this.setState(state => ({initialAction: {status: 'failure', payload: error}}))
+        this.setState(() => ({initialAction: {status: 'failure', payload: error}}))
       })
   }
 
