@@ -1,5 +1,6 @@
 import React from 'react'
 import './App.css'
+import {hot} from 'react-hot-loader'
 import DemoPage from './Demo/Page'
 
 const App = () => (
@@ -21,9 +22,13 @@ const App = () => (
         In an attempt to find a standard that works well for me in React,
         I have put together this little demo app.
       </p>
+      <p>
+        The interesting bits are in the code and can be used to kickstart
+        any new page or component you might need.
+      </p>
       <DemoPage />
     </div>
   </div>
 )
 
-export default App
+export default hot(module)(App)
