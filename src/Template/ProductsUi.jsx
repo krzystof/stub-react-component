@@ -2,6 +2,19 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import {ProductListItemType, AsyncFunctionType} from './custom-prop-types'
 
+/**
+
+Rendering the component
+=======================
+
+Using the data and the handlers passed down by the data
+container, render the UI.
+
+It is absolutely possible to include here another component
+created with `create-react-component`.
+
+**/
+
 const ProductsUi = ({
   products,
   productDetail,

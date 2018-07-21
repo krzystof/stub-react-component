@@ -1,5 +1,50 @@
 /**
 
+AsyncFn is a small object that model the lifecycle of an
+Promise.
+
+Instead of relying on checking strings and booleans to
+render the result of a Promise, this object allow you to
+use a more declarative API.
+
+A couple examples:
+
+```jsx
+let asyncFn = new AsyncFn()
+
+// Use it once to check for a state
+<button disabled={asyncFn.whenPending()}>Don't click me</button>
+
+// transition to another state
+asyncFn = asyncFn.toPending('some query params')
+
+asyncFn.whenPending(query => (
+  <div>Loading data for {query}</div>
+))
+
+asyncFn = asyncFn.toOk(['some', 'data'])
+
+asyncFn.whenOk(data => (
+  data.map(something => <div>{something}</div>)
+))
+
+asyncFn = asyncFn.toFailure(new Error('Uh oh'))
+
+asyncFn.whenFailure(error => (
+  <div>Oops! {error.message}<div>
+))
+
+// You can also return an element
+asyncFn.whenFailure(<div>Error!</div>)
+
+// or use `when` with an object to match on the state.
+// You don't have to handle all the cases.
+asyncFn.when({
+  pending: <div>loading</div>,
+  ok: data => <Component data={data} />
+})
+```
+
 Remove this file if you already have it globally in your app and don't need it.
 
 **/

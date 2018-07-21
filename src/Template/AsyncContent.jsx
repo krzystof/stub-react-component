@@ -2,6 +2,17 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import {AsyncFn} from './utils'
 
+/**
+
+Model the result of a function that fetches some data
+=====================================================
+
+Customize this component to render blank, loading and error
+state at your convenience. If you already have one in your
+app, delete this file and use your own component in the <Page>.
+
+**/
+
 class AsyncContent extends React.Component {
   static propTypes = {
     onLoad: PropTypes.func.isRequired,

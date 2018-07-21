@@ -8,6 +8,8 @@ import './products.css'
 Compose the application
 
 There should be no reasons to change this file.
+It only link the Data and the Ui and is used
+in tests and when mounting the <Page>.
 
 **/
 

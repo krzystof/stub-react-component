@@ -11,26 +11,10 @@ State Management
 This Container component will contain quite a bit of logic as it hold
 the state and how it updates depending on what's going on in the app.
 
-This stub provides 2 alternatives for managing update:
 
-1. A function per action
-That's the common React class. Each method updates the state directly.
-
-2. A state reducer
-Same as Redux, but in the class. All updates are piped through this function.
-
-
-Reasons to change:
-
-Adding a new feature, changing the behaviour or the shape of the data,
-... Loads in fact.
-BUT it should not change if we change the UI, refactor the markup, and so on.
-AND it should not change if we add another async functions that the UI can dispatch.
-
-
-// @TODO
-  // Is it possible to use a state reducer pattern?
-  // Is it possible to forward asynchronous callbacks to the UI without changing stuff here?
+You will edit this file to add your own logic.
+What is included in the template will most likely be deleted,
+but feel free to change the name and reuse some pieces of logic.
 
 **/
 
@@ -44,6 +28,7 @@ class ProductsData extends Component {
   }
 
   state = {
+    // delete that if you don't require initial data
     products: this.props.initialData,
     productDetail: new AsyncFn(),
     saveProduct: new AsyncFn(),

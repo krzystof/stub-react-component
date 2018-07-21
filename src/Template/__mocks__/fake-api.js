@@ -1,5 +1,8 @@
 /**
 
+Stub the result of an API for development and testing
+=====================================================
+
 Edit this file with the same shape of data returned by your server.
 
 It is better if the data can be a copy of what is really returned,

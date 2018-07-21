@@ -5,8 +5,8 @@ import fakeApi from './__mocks__/fake-api'
 
 /**
 
-Entry Point for a given page
-============================
+Entry Point for the new component
+=================================
 
 This component's role is to compose the application
 using the other components.
@@ -18,10 +18,6 @@ using the other components.
 It is possible to repeat this pattern at a lower level of the app.
 In this case, ProductsUi should still be a pure function, but one of the
 children could repeat the pattern we have here.
-
-  ? Should I put the sub-component in this file as well if possible ?
-  ? That would give a good overview of what this page is doing      ?
-  ? And keep the ProductsUi pure                                    ?
 
 The reason to change this file is when adding new asynchronous
 functions or changing the layout of the page.
