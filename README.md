@@ -1,4 +1,4 @@
-# Create React Component
+# Stub React Component
 
 > A fast way to generate a new component with tests anywhere in your app.
 
@@ -20,7 +20,7 @@ use case.
 npx create-react-app my-app
 cd my-app
 
-npx create-react-component src/MyNewComponent
+npx stub-react-component src/MyNewComponent
 ```
 
 Modify `src/App.jsx`:
@@ -46,7 +46,7 @@ And you should have an amazing component ready to be hacked!
 
 ## Generated template
 
-When running `npx create-react-component src/Example`, the following files will be generated in `src/Example`:
+When running `npx stub-react-component src/Example`, the following files will be generated in `src/Example`:
 
 ### Tests
 

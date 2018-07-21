@@ -1,10 +1,10 @@
 {
-  "name": "create-react-component",
+  "name": "stub-react-component",
   "version": "0.1.0",
   "description": "Create a component for your app in seconds",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/krzystof/create-react-component.git"
+    "url": "git+https://github.com/krzystof/stub-react-component.git"
   },
   "author": {
 		"name": "Christophe Graniczny",
