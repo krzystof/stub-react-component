@@ -32,42 +32,17 @@ AND it should not change if we add another async functions that the UI can dispa
 **/
 
 
-class DataContainer extends Component {
+class ProductsData extends Component {
   state = {
-    ...this.props.initialState,
-    searchTerm: '',
-  }
-
-  loadUsername = () => {
-    //
-    // That's how we handle an asynchronous thing.
-    // Run the async function and give it a callback
-    // that explains how the state should be updated.
-    //
-    // The responsibility of the async function is then
-    // just to track the lifecycle of the request and
-    // execute the callback whenever something changes.
-    //
-    // By doing this, we keep this class pure (we can
-    // pass a fake "loadUsername" function for testing).
-    //
-    this.props.loadUsername(loadUsernameState => {
-      return this.setState(() => ({loadUsernameState}))
-    })
-  }
-
-  changeSearchTerm = event => {
-    event.preventDefault()
-    this.setState({searchTerm: event.target.value})
+    products: this.props.initialData,
   }
 
   render() {
+    console.log(this.state)
     return this.props.children({
       ...this.state,
-      changeSearchTerm: this.changeSearchTerm,
-      onLoadUsername: this.loadUsername,
     })
   }
 }
 
-export default DataContainer
+export default ProductsData
