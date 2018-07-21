@@ -17,6 +17,9 @@
     "lint": "eslint src --ext jsx --ext js",
     "test": "jest"
   },
+  "bin" : {
+    "stub-react-component" : "./bin/stub-react-component.js"
+  },
   "dependencies": {
     "chalk": "^2.4.1",
     "ncp": "^2.0.0"
