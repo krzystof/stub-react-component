@@ -41,6 +41,7 @@ class ProductsData extends Component {
     showingForm: false,
     name: '',
     description: '',
+    filterTerm: '',
   }
 
   showProduct = product => () => {
@@ -89,6 +90,7 @@ class ProductsData extends Component {
     }))
   }
 
+  changeFilterTerm = event => this.setState({filterTerm: event.target.value})
   changeName = event => this.setState({name: event.target.value})
   changeDescription = event => this.setState({description: event.target.value})
 
@@ -100,6 +102,7 @@ class ProductsData extends Component {
       onChangeName: this.changeName,
       onChangeDescription: this.changeDescription,
       onSaveProduct: this.saveProduct,
+      onChangeFilterTerm: this.changeFilterTerm,
     })
   }
 }

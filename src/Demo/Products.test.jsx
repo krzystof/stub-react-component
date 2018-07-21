@@ -118,4 +118,18 @@ test('Add a product', async () => {
   expect(getByTestId('products')).toHaveTextContent('Flower Pot')
 })
 
-// filtering products
+test('Filter the list', () => {
+  const {container, getByLabelText} = renderProducts({
+    initialData: [
+      {id: 1, name: 'Bucket'},
+      {id: 2, name: 'Bin'},
+    ]
+  })
+
+  const filterInput = getByLabelText('Filter')
+  filterInput.value = 'Bi'
+  fireEvent.change(filterInput)
+
+  expect(container).not.toHaveTextContent('Bucket')
+  expect(container).toHaveTextContent('Bin')
+})

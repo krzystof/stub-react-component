@@ -46,7 +46,11 @@ const Page = () => (
       */}
       <AsyncContent onLoad={api.getProducts}>
         {(initialData) => (
-          <Products initialData={initialData} onCreateProduct={api.createProduct} />
+          <Products
+            initialData={initialData}
+            getProduct={api.getProduct}
+            saveProduct={api.saveProduct}
+          />
         )}
       </AsyncContent>
     </div>
