@@ -1,9 +1,9 @@
 import PropTypes from 'prop-types'
 
-export const ProductListItemType = {
+export const ProductListItemType = PropTypes.shape({
   id: PropTypes.number.isRequired,
-  name: PropTypes.number.isRequired,
-}
+  name: PropTypes.string.isRequired,
+})
 
 export const AsyncFunctionType = PropTypes.shape({
   when: PropTypes.func.isRequired,
