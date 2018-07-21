@@ -31,7 +31,7 @@ try {
 
 }
 
-const source = path.join(path.dirname(__dirname), 'src', 'Demo')
+const source = path.join(path.dirname(__dirname), 'src', 'Template')
 const destination = path.resolve(args[0])
 
 log(chalk.blue(`Creating a new component in ${args[0]}...`))
