@@ -1,6 +1,7 @@
 import React from 'react'
 import ProductsData from './ProductsData'
 import ProductsUi from './ProductsUi'
+import './products.css'
 
 /**
 

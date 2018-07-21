@@ -38,7 +38,7 @@ const api = USE_FAKE_DATA ? fakeApi : 'your api client goes here'
 
 const Page = () => (
   <div>
-    <div>Products</div>
+    <h1>Products</h1>
     <div>
       {/*
       If you don't need initial content or async callbacks,

@@ -8,7 +8,7 @@ const App = () => (
     <header className="App-header">
       <h1 className="App-title">React Architecture Demo</h1>
     </header>
-    <div className="Content">
+    <div className="App-intro">
       {/*
 
       Let's say that this part of the app is your main layout,
@@ -26,8 +26,8 @@ const App = () => (
         The interesting bits are in the code and can be used to kickstart
         any new page or component you might need.
       </p>
-      <DemoPage />
     </div>
+    <DemoPage />
   </div>
 )
 

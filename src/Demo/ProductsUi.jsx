@@ -18,36 +18,55 @@ const ProductsUi = ({
   onChangeFilterTerm,
 }) => {
   return (
-    <div>
+    <div className="Products">
       <div>
         {saveProduct.whenOk(
-          <div>Product saved!</div>
+          <div className="Products__success">Product saved!</div>
         )}
-        <div>
+        <div className="Products__filter-box">
           <label htmlFor="filter">Filter</label>
-          <input type="text" id="filter" value={filterTerm} onChange={onChangeFilterTerm} />
+          <input type="text" id="filter" value={filterTerm} onChange={onChangeFilterTerm} className="Products__filter-input" />
         </div>
-        <div data-testid="products">
-          {products
-            .filter(product => product.name.includes(filterTerm))
-            .map(product => (
-              <div key={product.id}>
-                <div>
-                  {product.name}
+        <div className="Products__content">
+          <div data-testid="products" className="Products__list">
+            {products
+              .filter(product => product.name.includes(filterTerm))
+              .map(product => (
+                <div key={product.id} className="Products__list-item">
+                  <div>
+                    {product.name}
+                  </div>
+                  <div>
+                    <button
+                      type="button"
+                      data-testid={`show-${product.id}`}
+                      onClick={onShowProduct(product)}>
+                      view
+                    </button>
+                  </div>
                 </div>
-                <button
-                  type="button"
-                  data-testid={`show-${product.id}`}
-                  onClick={onShowProduct(product)}>
-                    view
-                </button>
-              </div>
-            ))}
+              ))}
+          </div>
+          <div>
+            {productDetail.when({
+              pending: loadingName => <div>Loading {loadingName} details</div>,
+              ok: product => (
+                <div className="Products__detail">
+                  <h3>{product.name}</h3>
+                  <div>{product.description}</div>
+                </div>
+              ),
+              failure: message => (
+                <div>Could not load product: {message}</div>
+              )
+            })}
+          </div>
         </div>
         <div>
           {showingForm ? (
-            <form onSubmit={onSaveProduct}>
+            <form className="Products__form" onSubmit={onSaveProduct}>
               {saveProduct.whenPending(<div>Saving product...</div>)}
+              <h3>Create a new product</h3>
               <div>
                 <label htmlFor="name">Name</label>
                 <input type="text" id="name" value={name} onChange={onChangeName} />
@@ -62,20 +81,6 @@ const ProductsUi = ({
             <button type="button" onClick={onAddProduct}>Add a product</button>
           )}
         </div>
-      </div>
-      <div>
-        {productDetail.when({
-          pending: loadingName => <div>Loading {loadingName} details</div>,
-          ok: product => (
-            <div>
-              <div>{product.name}</div>
-              <div>{product.description}</div>
-            </div>
-          ),
-          failure: message => (
-            <div>Could not load product: {message}</div>
-          )
-        })}
       </div>
     </div>
   )
