@@ -37,6 +37,10 @@ class ProductsData extends Component {
   state = {
     products: this.props.initialData,
     productDetail: new AsyncFn(),
+    saveProduct: new AsyncFn(),
+    showingForm: false,
+    name: '',
+    description: '',
   }
 
   showProduct = product => () => {
@@ -55,10 +59,47 @@ class ProductsData extends Component {
     this.setState(prevState => ({productDetail: updateFn(prevState.productDetail)}))
   }
 
+  saveProduct = event => {
+    event.preventDefault()
+    this.setState(prevState => ({saveProduct: prevState.saveProduct.toPending()}))
+
+    this.props.saveProduct(this.state.name, this.state.description)
+      .then(product => {
+        this.setState(prevState => ({
+          saveProduct: prevState.saveProduct.toOk(),
+          products: [...prevState.products, product],
+          showingForm: false,
+        }))
+      })
+      .catch(error => {
+        this.setState(prevState => ({
+          saveProduct: prevState.saveProduct.toFailure(error.message)
+        }))
+      })
+  }
+
+  changeSaveProductState = updateFn => {
+    this.setState(prevState => ({saveProduct: updateFn(prevState.saveProduct)}))
+  }
+
+  showForm = () => {
+    this.setState(prevState => ({
+      showingForm: true,
+      saveProduct: prevState.saveProduct.toIdle()
+    }))
+  }
+
+  changeName = event => this.setState({name: event.target.value})
+  changeDescription = event => this.setState({description: event.target.value})
+
   render() {
     return this.props.children({
       ...this.state,
       onShowProduct: this.showProduct,
+      onAddProduct: this.showForm,
+      onChangeName: this.changeName,
+      onChangeDescription: this.changeDescription,
+      onSaveProduct: this.saveProduct,
     })
   }
 }

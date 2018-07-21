@@ -28,8 +28,13 @@ Useful to target the tests on a specific piece of behaviour.
 const renderProducts = ({
   initialData = simplifiedList,
   getProduct = () => null,
+  saveProduct = () => null,
 } = {}) => render(
-  <Products initialData={initialData} getProduct={getProduct} />
+  <Products
+    initialData={initialData}
+    getProduct={getProduct}
+    saveProduct={saveProduct}
+  />
 )
 
 test('Displays a list of products', () => {
@@ -79,5 +84,38 @@ test('Fail to view a product description', async () => {
 })
 
 
-// adding a product
+test('Add a product', async () => {
+  const mockSaveProduct = jest.fn((name, description) => Promise.resolve({
+    id: 6,
+    name,
+    description,
+  }))
+
+  const {getByTestId, getByText, getByLabelText} = renderProducts({
+    saveProduct: mockSaveProduct,
+  })
+
+  fireEvent.click(getByText('Add a product'))
+
+  const nameInput = getByLabelText('Name')
+  nameInput.value = 'Flower Pot'
+  fireEvent.change(nameInput)
+
+  const descriptionInput = getByLabelText('Description')
+  descriptionInput.value = 'Beautiful and waterproof.'
+  fireEvent.change(descriptionInput)
+
+  const saveButton = getByText('Save')
+  fireEvent.click(saveButton)
+  expect(saveButton.disabled).toBe(true)
+
+  expect(mockSaveProduct).toHaveBeenCalled()
+  expect(mockSaveProduct).toHaveBeenCalledWith('Flower Pot', 'Beautiful and waterproof.')
+
+  await waitForElement(() => getByText('Saving product...'))
+  await waitForElement(() => getByText('Product saved!'))
+
+  expect(getByTestId('products')).toHaveTextContent('Flower Pot')
+})
+
 // filtering products

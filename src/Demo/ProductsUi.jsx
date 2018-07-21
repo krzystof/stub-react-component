@@ -4,24 +4,55 @@ import React from 'react'
 const ProductsUi = ({
   products,
   productDetail,
+  saveProduct,
+  showingForm,
+  name,
+  description,
   onShowProduct,
+  onAddProduct,
+  onChangeName,
+  onChangeDescription,
+  onSaveProduct,
 }) => {
   return (
     <div>
       <div>
-        {products.map(product => (
-          <div key={product.id}>
-            <div>
-              {product.name}
+        {saveProduct.whenOk(
+          <div>Product saved!</div>
+        )}
+        <div data-testid="products">
+          {products.map(product => (
+            <div key={product.id}>
+              <div>
+                {product.name}
+              </div>
+              <button
+                type="button"
+                data-testid={`show-${product.id}`}
+                onClick={onShowProduct(product)}>
+                view
+              </button>
             </div>
-            <button
-              type="button"
-              data-testid={`show-${product.id}`}
-              onClick={onShowProduct(product)}>
-              view
-            </button>
-          </div>
-        ))}
+          ))}
+        </div>
+        <div>
+          {showingForm ? (
+            <form onSubmit={onSaveProduct}>
+              {saveProduct.whenPending(<div>Saving product...</div>)}
+              <div>
+                <label htmlFor="name">Name</label>
+                <input type="text" id="name" value={name} onChange={onChangeName} />
+              </div>
+              <div>
+                <label htmlFor="description">Description</label>
+                <input type="text" id="description" value={description} onChange={onChangeDescription} />
+              </div>
+              <button type="submit" disabled={saveProduct.whenPending()}>Save</button>
+            </form>
+          ) : (
+            <button type="button" onClick={onAddProduct}>Add a product</button>
+          )}
+        </div>
       </div>
       <div>
         {productDetail.when({
