@@ -1,7 +1,7 @@
 import React from 'react'
 import './App.css'
 import {hot} from 'react-hot-loader'
-import DemoPage from './Demo/Page'
+import TemplatePage from './Template/Page'
 
 const App = () => (
   <div className="App">
@@ -27,7 +27,7 @@ const App = () => (
         any new page or component you might need.
       </p>
     </div>
-    <DemoPage />
+    <TemplatePage />
   </div>
 )
 

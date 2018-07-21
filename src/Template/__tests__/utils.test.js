@@ -1,4 +1,4 @@
-import {AsyncFn} from './utils'
+import {AsyncFn} from '../utils'
 
 test('is idle by default', () => {
   const asyncFn = new AsyncFn()

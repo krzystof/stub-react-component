@@ -7,7 +7,7 @@ import {
   waitForElement,
 } from 'react-testing-library'
 import 'jest-dom/extend-expect'
-import Products from './Products'
+import Products from '../Products'
 
 afterEach(cleanup)
 

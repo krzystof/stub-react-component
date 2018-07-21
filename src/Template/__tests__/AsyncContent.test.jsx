@@ -4,7 +4,7 @@ import {
   render, cleanup, waitForElement
 } from 'react-testing-library'
 import 'jest-dom/extend-expect'
-import AsyncContent from './AsyncContent'
+import AsyncContent from '../AsyncContent'
 
 afterEach(cleanup)
 

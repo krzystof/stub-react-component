@@ -33,7 +33,7 @@ module.exports = {
 
   transform: {
     '^.+\\.(js|jsx|mjs)$': '<rootDir>/node_modules/babel-jest',
-    '^.+\\.css$': '<rootDir>/src/jestCssTransform.js',
+    '^.+\\.css$': '<rootDir>/jestCssTransform.js',
   },
 
   testMatch: [

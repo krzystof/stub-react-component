@@ -26,5 +26,5 @@ and come back to our Update function.
 
 ## Publish
 
-- ask feedback from famous guys
+- ask feedback from people
 - create a npm bin command that generate that for you!
