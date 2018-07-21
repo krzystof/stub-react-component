@@ -14,13 +14,17 @@ const maybeCall = (state, query, data) => val => {
   return typeof val === 'undefined' ? true : val
 }
 
-
 const AsyncFn = (state = 'idle', data = null) => {
   return {
     whenIdle: maybeCall(state, 'idle'),
     whenPending: maybeCall(state, 'pending', data),
     whenOk: maybeCall(state, 'ok', data),
     whenFailure: maybeCall(state, 'failure', data),
+
+    when: cases => {
+      const cb = cases[state]
+      return typeof cb === 'function' ? cb(data) : cb
+    },
 
     toIdle: () => new AsyncFn('idle'),
     toPending: (arg) => new AsyncFn('pending', arg),

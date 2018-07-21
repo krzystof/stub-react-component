@@ -1,4 +1,5 @@
 import {Component} from 'react'
+import {AsyncFn} from './utils'
 
 /**
 
@@ -35,12 +36,22 @@ AND it should not change if we add another async functions that the UI can dispa
 class ProductsData extends Component {
   state = {
     products: this.props.initialData,
+    productDetail: new AsyncFn(),
+  }
+
+  showProduct = product => () => {
+    this.setState(prevState => ({productDetail: prevState.productDetail.toPending(product.name)}))
+
+    this.props.onShowProduct(product.id)
+      .then(productDetail => {
+        this.changeProductDetailState(state => state.toOk(productDetail))
+      })
   }
 
   render() {
-    console.log(this.state)
     return this.props.children({
       ...this.state,
+      onShowProduct: this.showProduct,
     })
   }
 }
