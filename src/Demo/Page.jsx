@@ -8,58 +8,41 @@ import StatsUi from './StatsUi'
 Entry Point for a given page
 ============================
 
-The component links external services, such as an API,
-and link it to our page component.
+There are 2 things to consider for async functions.
+- initial data needed to view the page
+- asynchronous actions that have an effect on the UI
 
-When opening this file, it should be obvious to spot
-the external depencies of our page (file system,
-APIs, any other asynchronous requests).
+This starter template takes the example of a CRUD app
+for items. Run the command line tool to initialize it
+in a directory.
 
-
-Reason to change:
-
-The only reason to modify this file should be
-when adding external needs from the Page component.
-
-
-  // @TODO
-  // Move the async bindings into the Async class.
-  // This file should have no reasons to change.
+This component loads links all the other one.
 
 **/
 
-const apiGetStuff = () => {
-  return Promise.resolve({username: '@bob'})
-}
+const USE_FAKE_DATA = true
 
-const onLoadUsername = () => {
-  const items = [
-    '@krzystof',
-    '@david',
-    '@matt',
-    '@sam',
-    '@tom',
-  ]
-
-  const username = items[Math.floor(Math.random() * items.length)]
-
-  if (username === '@sam') {
-    return Promise.reject(new Error('shit happens'))
-  }
-
-  return Promise.resolve({username})
-}
+const api = USE_FAKE_DATA ? fakeApi : 'yourApiClient'
 
 const Page = () => (
-  <AsyncActions onLoad={apiGetStuff} onLoadUsername={onLoadUsername}>
-    {(initialStateAndAsyncHandlers) => (
-      <DataContainer {...initialStateAndAsyncHandlers}>
-        {({...props}) => (
-          <StatsUi {...props} />
+  <div>
+    <div>Products</div>
+    <div>
+      {/*
+      If you don't need initial content, just
+      render the data container straight away.
+      */}
+      <AsyncContent onLoad={api.getStuff}>
+        {(initialData) => (
+          <DataContainer initialData={initialData}>
+            {({...props}) => (
+              <ProductsUi {...props} />
+            )}
+          </DataContainer>
         )}
-      </DataContainer>
-    )}
-  </AsyncActions>
+      </AsyncContent>
+    </div>
+  </div>
 )
 
 export default Page
