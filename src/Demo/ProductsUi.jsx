@@ -1,5 +1,6 @@
 import React from 'react'
-// import PropTypes from 'prop-types'
+import PropTypes from 'prop-types'
+import {ProductListItemType, AsyncFunctionType} from './custom-prop-types'
 
 const ProductsUi = ({
   products,
@@ -64,7 +65,7 @@ const ProductsUi = ({
       </div>
       <div>
         {productDetail.when({
-          pending: name => <div>Loading {name} details</div>,
+          pending: loadingName => <div>Loading {loadingName} details</div>,
           ok: product => (
             <div>
               <div>{product.name}</div>
@@ -78,6 +79,22 @@ const ProductsUi = ({
       </div>
     </div>
   )
+}
+
+ProductsUi.propTypes = {
+  products: PropTypes.arrayOf(ProductListItemType).isRequired,
+  productDetail: AsyncFunctionType.isRequired,
+  saveProduct: AsyncFunctionType.isRequired,
+  showingForm: PropTypes.bool.isRequired,
+  name: PropTypes.string.isRequired,
+  description: PropTypes.string.isRequired,
+  filterTerm: PropTypes.string.isRequired,
+  onShowProduct: PropTypes.func.isRequired,
+  onAddProduct: PropTypes.func.isRequired,
+  onChangeName: PropTypes.func.isRequired,
+  onChangeDescription: PropTypes.func.isRequired,
+  onSaveProduct: PropTypes.func.isRequired,
+  onChangeFilterTerm: PropTypes.func.isRequired,
 }
 
 export default ProductsUi

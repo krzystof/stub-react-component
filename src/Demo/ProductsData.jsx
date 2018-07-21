@@ -1,4 +1,6 @@
 import {Component} from 'react'
+import PropTypes from 'prop-types'
+import {ProductListItemType} from './custom-prop-types'
 import {AsyncFn} from './utils'
 
 /**
@@ -34,6 +36,13 @@ AND it should not change if we add another async functions that the UI can dispa
 
 
 class ProductsData extends Component {
+  static propTypes = {
+    initialData: PropTypes.arrayOf(ProductListItemType).isRequired,
+    getProduct: PropTypes.func.isRequired,
+    saveProduct: PropTypes.func.isRequired,
+    children: PropTypes.func.isRequired,
+  }
+
   state = {
     products: this.props.initialData,
     productDetail: new AsyncFn(),
