@@ -40,12 +40,19 @@ class ProductsData extends Component {
   }
 
   showProduct = product => () => {
-    this.setState(prevState => ({productDetail: prevState.productDetail.toPending(product.name)}))
+    this.changeProductDetailState(asyncFn => asyncFn.toPending(product.name))
 
-    this.props.onShowProduct(product.id)
+    this.props.getProduct(product.id)
       .then(productDetail => {
-        this.changeProductDetailState(state => state.toOk(productDetail))
+        this.changeProductDetailState(asyncFn => asyncFn.toOk(productDetail))
       })
+      .catch(error => {
+        this.changeProductDetailState(asyncFn => asyncFn.toFailure(error.message))
+      })
+  }
+
+  changeProductDetailState = updateFn => {
+    this.setState(prevState => ({productDetail: updateFn(prevState.productDetail)}))
   }
 
   render() {

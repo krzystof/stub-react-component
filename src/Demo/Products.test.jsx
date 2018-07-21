@@ -29,7 +29,7 @@ const renderProducts = ({
   initialData = simplifiedList,
   getProduct = () => null,
 } = {}) => render(
-  <Products initialData={initialData} onShowProduct={getProduct} />
+  <Products initialData={initialData} getProduct={getProduct} />
 )
 
 test('Displays a list of products', () => {
@@ -50,7 +50,7 @@ test('View a product description', async () => {
   ))
 
   const {container, getByTestId, getByText} = renderProducts({
-    onShowProduct: mockShowProduct,
+    getProduct: mockShowProduct,
   })
 
   fireEvent.click(getByTestId('show-2'))
@@ -63,6 +63,21 @@ test('View a product description', async () => {
 
   expect(container).toHaveTextContent('Expensive but handy.')
 })
+
+test('Fail to view a product description', async () => {
+  const mockShowProduct = jest.fn(() => Promise.reject(
+    new Error('request failed')
+  ))
+
+  const {getByTestId, getByText} = renderProducts({
+    getProduct: mockShowProduct,
+  })
+
+  fireEvent.click(getByTestId('show-2'))
+
+  await waitForElement(() => getByText('Could not load product: request failed'))
+})
+
 
 // adding a product
 // filtering products

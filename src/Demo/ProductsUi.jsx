@@ -14,7 +14,10 @@ const ProductsUi = ({
             <div>
               {product.name}
             </div>
-            <button type="button" onClick={onShowProduct(product)}>
+            <button
+              type="button"
+              data-testid={`show-${product.id}`}
+              onClick={onShowProduct(product)}>
               view
             </button>
           </div>
