@@ -1,11 +1,22 @@
 {
-  "name": "react-architecture",
+  "name": "create-react-component",
   "version": "0.1.0",
-  "private": true,
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/krzystof/create-react-component.git"
+  },
+  "author": {
+		"name": "Christophe Graniczny",
+		"email": "getintouch@christophegraniczny.com",
+		"url": "christophegraniczny.com"
+  },
+  "license": "MIT",
   "dependencies": {
     "babel-eslint": "^8.2.6",
     "babel-plugin-transform-object-rest-spread": "^6.26.0",
+    "chalk": "^2.4.1",
     "jest": "^23.4.1",
+    "ncp": "^2.0.0",
     "react-testing-library": "^4.1.3"
   },
   "scripts": {
