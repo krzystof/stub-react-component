@@ -10,8 +10,7 @@ I test, and so on.
 And I almost always ended in the same place. Asynchronous actions, state, ui.
 This tool generates a couple React components and the tests that comes with (using
 react-testing-library).
-Generate a new component, and start hacking on these files to tailor them to your
-use case.
+Generate a new component, and modify the files to fit you use case.
 
 ## Quick Overview
 
@@ -42,7 +41,28 @@ const App = () => (
 export default App
 ```
 
-And you should have an amazing component ready to be hacked!
+Then run `yarn start`, head off to `http://localhost:3000` to view the created component.
+
+What is included in the stub component:
+- fetch initial products from a fake api
+- display a list of products
+- a button to display the detail of a product (fetch from the fake api)
+- filter the products by name
+- button to display a form and create a new product (backed by the fake api)
+
+
+
+## TDD Workflow
+
+That's how these stubs can be used when working on a new feature.
+
+- first, if a real API client is available, write tests against this client
+- test-drive the fake-api by running the same set of tests that were written for the real client. Running the same tests is very powerful as it ensures that the fake has the same behaviour as the real client.
+- update the `Page.test.jsx` by adding a generic scenario for the new feature and use it to drive the implementation of `Page.jsx`.
+- implement, tests-first, the functionalities at a lower level by adding tests to `Products.test.jsx`. use it to drive the implementations of `ProductsData.jsx` and `ProductsUi.jsx`.
+- change the `USE_FAKE_DATA` constant to `false` in `Page.jsx` and verify that everything works as expected in the browser.
+- add style to `products.css` and class names to `ProductsUi.jsx`.
+- rename the files as needed. Lean on Eslint to make sure that all paths to the components are resolved.
 
 ## Generated template
 
@@ -116,12 +136,3 @@ functionality of the component.
 Test the `AsyncFn` utility. Delete it if you are not using it.
 
 Check out the template in `src/Template`. There are comments and info in each of them.
-
-## Workflow
-This is how I use this template.
-- if I have a real api client, write tests for the requests I need. Then run the same suite of tests on the fake api.
-- implement the functionality I need, changing `Product.test.jsx`, `ProductsData.jsx` and `ProductsUi.jsx` to suite my needs.
-- update the `Page.test.jsx` and `Page.jsx` with a generic scenario.
-- change the `USE_FAKE_DATA` constant to `false` in `Page.jsx` and see how it goes in the browser.
-- add style to `products.css` and class names to `ProductsUi.jsx`.
-- rename the file with a filename that contains `Product` to `MyComponent`.

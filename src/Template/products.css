@@ -20,6 +20,12 @@
   border-radius: 4px;
 }
 
+.Products {
+  max-width: 900px;
+  margin: auto;
+  text-align: left;
+}
+
 .Products__filter-box {
   margin-bottom: 2rem;
   display: flex;
